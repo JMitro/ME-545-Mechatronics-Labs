@@ -4,9 +4,11 @@ clc
 % Fill in the time vector, and create noisy data
 time = 0:0.01:10;
 u_noisy = 3*sin(time) + 2.5*randn([1,length(time)]);
+fc = 1/0.055; % cut off frequency
+fs = 125/2; % sampling frequency
 
 % This is the command for 25 cutoff frequency and 100 sampling frequency:
-[b,a]= butter(1,14.7/166.667);
+[b,a]= butter(1,fc/fs);
 
 % The filter command can do the filtering
 filter_command_result = filter(b,a,u_noisy);
