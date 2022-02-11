@@ -62,7 +62,7 @@ void loop() {
   elapsedTime = currentTime - startTime; // calculate the elapsed time
 
   // collect data at a fequency of 125 Hz (every 8 milliseconds)
-  if (8 <= elapsedTime) {
+  if (0 == (elapsedTime % 100)) {
 
     // Collect IR sensor 1 data
     sensorValue1 = analogRead(IRsensor1);
@@ -87,11 +87,12 @@ void loop() {
 
     // Use two distances to calculate the final distance
     // if IR sensor 2 reads a distance of 65 or more, only use IR sensor 1 data
-    if (65 < distance2) {
+    if (120 < distance2) {
       w1 = .935;
       w2 = 0;
       distance = (w1 * distance1);
     }
+    
     // if IR sensor 2 reads a distance of 40cm or closer, only use IR sensor 2 data
     if (40 >= distance2) {
       w1 = 0;
