@@ -1,3 +1,10 @@
+/*
+   ME 545 Lab 2
+   IR sensor measurement
+   Polling loop - how to initiate data collection at a certain frequency
+   Juliette Mitrovich, Sujani, Sheila Moroney
+*/
+
 unsigned long startTime = 0; // variable for the start time
 unsigned long currentTime = 0; // variable for the current time
 unsigned long elapsedTime; // variable to store the elapsed time (currentTime - startTime)
@@ -23,8 +30,8 @@ void loop() {
   currentTime = millis();
   elapsedTime = currentTime - startTime; // calculate the elapsed time
 
-  // collect 200 sampling points
-  if (3 <= elapsedTime && 805 >= count) {
+  // collect 500 data points at a frequency of 125 Hz
+  if (8 <= elapsedTime && 500 >= count) {
     sensorValueRaw = analogRead(IRsensorRaw); // read the output of the IRsensor and store it
     voltageRaw = sensorValueRaw * (5.0 / 1023.0); // convert the sensorValue to a voltage
 
