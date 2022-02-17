@@ -8,7 +8,6 @@
 unsigned long startTime = 0; // variable for the start time
 unsigned long currentTime = 0; // variable for the current time
 unsigned long elapsedTime; // variable to store the elapsed time (currentTime - startTime)
-unsigned long samplingTime;
 
 float IRsensorRaw = A0; // set raw IRsensor data as pin A0
 float IRsensorAF = A1; // set analog filtered IRsensor data as pin A1
