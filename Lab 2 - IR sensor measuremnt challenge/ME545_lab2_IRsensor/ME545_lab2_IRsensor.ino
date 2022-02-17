@@ -4,7 +4,7 @@
    Lab Group 5
    Juliette Mitrovich, Sijani, Sheila Moroney
 */
-// Polling loop variables (f = 333Hz)
+// Polling loop variables
 unsigned long startTime = 0; // variable for the start time
 unsigned long currentTime = 0; // variable for the current time
 unsigned long elapsedTime; // variable to store the elapsed time (currentTime - startTime)
@@ -88,7 +88,7 @@ void loop() {
     // Use two distances to calculate the final distance
     // if IR sensor 2 reads a distance of 65 or more, only use IR sensor 1 data
     if (120 < distance2) {
-      w1 = .935;
+      w1 = 1.05;
       w2 = 0;
       distance = (w1 * distance1);
     }
@@ -101,7 +101,7 @@ void loop() {
     }
 
     // if IR sensor 2 reads a distance between 40cm and 60 cm, average the two sensor distances
-    if (65 >= distance2 && 40 < distance2) {
+    if (120 >= distance2 && 40 < distance2) {
       w1 = 1;
       w2 = 1;
       distance = ((w1 * distance1) + (w2 * distance2_adj)) / (w1 + w2);
@@ -112,11 +112,11 @@ void loop() {
     tone(9, pitch);
 
     // Print data to the serial monitor
-    //      Serial.print(distance1);
+    //      Serial.print(distance1); // print when you want to test sensor 1 distance
     //      Serial.print(", ");
-    //      Serial.println(distance2);
+    //      Serial.print(distance2); // print when you want to test sensor 2 distance
     //      Serial.print(", ");
-    Serial.println(distance);
+    Serial.println(distance); // print when you want to test sensor fusion distance
 
     startTime = millis(); // reset startTime to allow for 125Hz of polling
   }
