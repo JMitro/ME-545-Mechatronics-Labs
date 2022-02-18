@@ -37,12 +37,11 @@ void setup()
 
 void loop()
 {
-
   //Display numbers one by one with 2 seconds delay
   for (int i = 0; i < 10; i++) {
     sevseg1.setNumber(i);
-    sevseg2.setNumber(i);
     sevseg1.refreshDisplay();
+    sevseg2.setNumber(i);
     sevseg2.refreshDisplay();
     delay(1000);
   }
