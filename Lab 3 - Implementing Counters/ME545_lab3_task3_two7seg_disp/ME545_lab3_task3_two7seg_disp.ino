@@ -33,7 +33,7 @@ byte digitPins2[] = {};
 byte segmentPins2[] = {33, 32, 38, 37, 36, 34, 35, 39};
 bool resistorsOnSegments2 = true;
 
-int i = 0; // Counter to keep track of what number should be displayed
+int i = 1; // Counter to keep track of what number should be displayed
 
 ///// PUSH BUTTON VARIABLES /////
 // must be attached to a pin that allows hardware interrupts (MEGA: 2,3,18,19)
@@ -110,6 +110,6 @@ void isrClear() {
     sevseg1.refreshDisplay();
     sevseg2.setNumber(0);
     sevseg2.refreshDisplay();
-    i = 0; // set i back to 0 so the count will restart
+    i = 1; // set i back to 0 so the count will restart
   }
 }
