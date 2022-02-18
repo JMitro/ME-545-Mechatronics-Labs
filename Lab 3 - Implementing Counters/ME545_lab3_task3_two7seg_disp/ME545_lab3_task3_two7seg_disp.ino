@@ -39,7 +39,7 @@ int stateButtonClear;
 int photoInterrupt = A1;
 int photoInterruptVal;
 
-void ISR () {
+void isr () {
   if (flagEnable == 1) {
     if (i <= 99) {
       i++;
@@ -69,7 +69,7 @@ void setup()
   pinMode(pushButtonClear, INPUT_PULLUP);
 
   pinMode(photoInterrupt, INPUT);
-  attachInterrupt(digitalPinToInterrupt(photoInterrupt), ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(photoInterrupt), isr, CHANGE);
 }
 
 void loop() {
