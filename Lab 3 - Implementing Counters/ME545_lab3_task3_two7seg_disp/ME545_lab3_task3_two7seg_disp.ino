@@ -1,6 +1,15 @@
+/*
+   ME 545 - Lab 4 Task 3 Group 5
+   Juliette Mitrovich, Sheila Moroney, Sujani Patel
+   Goal: Count, on the 7 segment display, every time something passes between the optical interrupter.
+   You should be able to count from 0 to 99. You must also attach interrupts to two push buttons, one interrupt to
+   clear the display, and one interrupt to enable the display
+
+*/
 
 ///// SEVEN SEGMENT DISPLAY VARIABLES /////
 #include "SevSeg.h"
+// define the two 7 segment displays as different names to differentiate and not overwrite data
 SevSeg sevseg1;
 SevSeg sevseg2;
 
@@ -24,38 +33,23 @@ byte digitPins2[] = {};
 byte segmentPins2[] = {33, 32, 38, 37, 36, 34, 35, 39};
 bool resistorsOnSegments2 = true;
 
-int i = 0;
+int i = 0; // Counter to keep track of what number should be displayed
 
 ///// PUSH BUTTON VARIABLES /////
-int pushButtonEnable = 0;
-int flagEnable;
-int stateButtonEnable;
+// must be attached to a pin that allows hardware interrupts (MEGA: 2,3,18,19)
+int pushButtonEnable = 18;
+int pushButtonClear = 19;
 
-int pushButtonClear = 0;
-int flagClear;
+// variables to store output of the push buttons
+int stateButtonEnable; 
 int stateButtonClear;
 
-///// PHOTO INTERRUPTOR VARIABLES /////
-int photoInterrupt = A1;
+///// OPTICAL INTERRUPT VARIABLES /////
+int photoInterrupt = A4;
 int photoInterruptVal;
 
-void isr () {
-  if (flagEnable == 1) {
-    if (i <= 99) {
-      i++;
-      int disp1 = i % 10;
-      int disp2 = i / 10;
-      sevseg1.setNumber(disp1);
-      sevseg2.setNumber(disp2);
-      sevseg1.refreshDisplay();
-      sevseg2.refreshDisplay();
-    }
-  }
-}
-
-void setup()
-{
-  Serial.begin(9600);
+void setup() {
+  Serial.begin(9600); // Initialize serial monitor if you want to print anything
 
   //Initialize sevseg object. Uncomment second line if you use common cathode 7 segment
   sevseg2.begin(COMMON_ANODE, numDigits1, digitPins1, segmentPins1, resistorsOnSegments1);
@@ -65,36 +59,57 @@ void setup()
   sevseg2.setBrightness(90);
 
   // Initialize push buttons
-  pinMode(pushButtonEnable, INPUT_PULLUP);
-  pinMode(pushButtonClear, INPUT_PULLUP);
+  pinMode(pushButtonEnable, INPUT);
+  pinMode(pushButtonClear, INPUT);
 
+  // Attach a hardware interrupt to the push buttons, ISR will run whenever there is a change in pin value
+  attachInterrupt(digitalPinToInterrupt(pushButtonEnable), isrEnable, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(pushButtonClear), isrClear, CHANGE);
+
+  // Initialize photo interrupt pin
   pinMode(photoInterrupt, INPUT);
-  attachInterrupt(digitalPinToInterrupt(photoInterrupt), isr, CHANGE);
+
 }
 
 void loop() {
+  // Read data from all necessary sensors
   stateButtonEnable = digitalRead(pushButtonEnable);
   stateButtonClear = digitalRead(pushButtonClear);
+  photoInterruptVal = analogRead(photoInterrupt);
 
-  // If the enable button is pushed, add one to the flag
-  if (stateButtonEnable == 0) {
-    flagEnable = flagEnable + 1;
+  // If something passes between the optical interrupt and i <= 99, display and increase the value by 1
+  if (500 > photoInterruptVal) {
+    if (99 >= i) {
+      int disp1 = i % 10;
+      int disp2 = i / 10;
+      sevseg1.setNumber(disp1);
+      sevseg1.refreshDisplay();
+      sevseg2.setNumber(disp2);
+      sevseg2.refreshDisplay();
+      i++;
+      delay(500); // add a delay so the display doesn't count too fast
+    }
   }
-  if (flagEnable == 1) {
-    sevseg1.setNumber(i);
-    sevseg2.setNumber(i);
+}
+
+///// HARDWARE INTERRUPT FUNCITONS /////
+// If the enable button is pushed, turn the display on and set it to 0
+void isrEnable () {
+  if (stateButtonEnable == 1) {
+    sevseg1.setNumber(0);
+    sevseg1.refreshDisplay();
+    sevseg2.setNumber(0);
+    sevseg2.refreshDisplay();
   }
+}
 
-  if (stateButtonClear == 0) {
-    flagClear = flagClear + 1;
+// If the clear button is pushed, change the display to 0 and set i back to 0
+void isrClear() {
+  if (stateButtonClear == 1) {
+    sevseg1.setNumber(0);
+    sevseg1.refreshDisplay();
+    sevseg2.setNumber(0);
+    sevseg2.refreshDisplay();
+    i = 0; // set i back to 0 so the count will restart
   }
-
-  if (flagClear == 1) {
-    i = 0;
-    sevseg1.setNumber(i);
-    sevseg2.setNumber(i);
-  }
-
-
-
 }
