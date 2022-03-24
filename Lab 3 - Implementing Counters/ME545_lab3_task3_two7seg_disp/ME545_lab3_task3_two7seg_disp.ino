@@ -41,7 +41,7 @@ int pushButtonEnable = 18;
 int pushButtonClear = 19;
 
 // variables to store output of the push buttons
-int stateButtonEnable; 
+int stateButtonEnable;
 int stateButtonClear;
 
 ///// OPTICAL INTERRUPT VARIABLES /////
@@ -52,8 +52,8 @@ void setup() {
   Serial.begin(9600); // Initialize serial monitor if you want to print anything
 
   //Initialize sevseg object. Uncomment second line if you use common cathode 7 segment
-  sevseg2.begin(COMMON_ANODE, numDigits1, digitPins1, segmentPins1, resistorsOnSegments1);
-  sevseg1.begin(COMMON_ANODE, numDigits2, digitPins2, segmentPins2, resistorsOnSegments2);
+  sevseg1.begin(COMMON_ANODE, numDigits1, digitPins1, segmentPins1, resistorsOnSegments1);
+  sevseg2.begin(COMMON_ANODE, numDigits2, digitPins2, segmentPins2, resistorsOnSegments2);
   //sevseg.begin(COMMON_CATHODE, numDigits, digitPins, segmentPins, resistorsOnSegments);
   sevseg1.setBrightness(90);
   sevseg2.setBrightness(90);
@@ -80,8 +80,8 @@ void loop() {
   // If something passes between the optical interrupt and i <= 99, display and increase the value by 1
   if (500 > photoInterruptVal) {
     if (99 >= i) {
-      int disp1 = i % 10;
-      int disp2 = i / 10;
+      int disp1 = i / 10;
+      int disp2 = i % 10;
       sevseg1.setNumber(disp1);
       sevseg1.refreshDisplay();
       sevseg2.setNumber(disp2);
@@ -103,13 +103,13 @@ void isrEnable () {
   }
 }
 
-// If the clear button is pushed, change the display to 0 and set i back to 0
+// If the clear button is pushed, change the display to 0 and set i back to 1
 void isrClear() {
   if (stateButtonClear == 1) {
     sevseg1.setNumber(0);
     sevseg1.refreshDisplay();
     sevseg2.setNumber(0);
     sevseg2.refreshDisplay();
-    i = 1; // set i back to 0 so the count will restart
+    i = 1; // set i back to 1 so the count will restart
   }
 }
