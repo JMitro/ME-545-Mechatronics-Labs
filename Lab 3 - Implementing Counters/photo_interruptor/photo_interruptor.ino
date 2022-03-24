@@ -3,9 +3,9 @@
    Built in LED on pin 13 will turn on when something is placed between the optical interrupt sensor
 */
 
-int photoInterrupt = A0;
+int photoInterrupt = A1;
 int photoInterruptVal;
-int led = 13;
+int led = 10;
 
 void setup() {
   Serial.begin(9600);
